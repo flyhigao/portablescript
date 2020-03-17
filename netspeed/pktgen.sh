@@ -8,8 +8,9 @@
 # $7 use nic
 # $8 packetsize
 
-#time sh 4x-script-pktgen-10g-tx-ratep-pkts 0 2 10000000  9.9.9.1 9.9.9.2  a4:bf:01:13:9d:0a ens802f0
-#time sh 4x-script-pktgen-10g-tx-ratep-pkts 0 2 10000000  192.168.60.2 10.5.10.2  52:54:00:d9:f7:ea ens802f1
+#time sh pktgen.sh 0 2 10000000  9.9.9.1 9.9.9.2  a4:bf:01:13:9d:0a ens802f0 60
+#time sh pktgen.sh 0 2 10000000  192.168.60.2 10.5.10.2  52:54:00:d9:f7:ea ens802f1 60
+modprobe pktgen
 function pgset() {
     local result
     if [ "$1" != "rem_device_all" ];then
@@ -19,11 +20,11 @@ function pgset() {
 }
 
 # Config Start Here -----------------------------------------------------------
-echo pps:$1  , cpus:$2 , total count:$3 , srcip:$4 , dstip:$5 , dstmac:$6 , nic:$7 , packetsize:$8
+echo ratep:$1  , cpus:$2 , total count:$3 , srcip:$4 , dstip:$5 , dstmac:$6 , nic:$7 , packetsize:$8
 # thread config
 CPUS=$2
 PKTS=`echo "scale=0; $3/$CPUS" | bc`
-CLONE_SKB="clone_skb 100"
+CLONE_SKB="clone_skb 1000"   #every 1000 packet are same
 PKT_SIZE="pkt_size $8"
 COUNT="count $PKTS"
 DELAY="delay 0"
@@ -55,12 +56,14 @@ PGDEV=/proc/net/pktgen/$ETH@$processor
 #  echo "Configuring $PGDEV"
  pgset "$COUNT"
  pgset "flag QUEUE_MAP_CPU"
+ pgset "flag UDPCSUM"
+ pgset "flag NODE ALLOC"
  pgset "$CLONE_SKB"
  pgset "$PKT_SIZE"
  pgset "$DELAY"
-if [ $RATEP -ne 0 ];then
- pgset "ratep $RATEP"
-fi
+ if [ "$RATEP"x != "0"x ];then
+    pgset "ratep $RATEP"
+ fi
  pgset "dst $DSTIP" 
  pgset "src_min $SRCIP"
  pgset "udp_dst_min 53"
@@ -72,8 +75,8 @@ fi
 # pgset "dst_max 10.255.255.255"
 # enable configuration packet
 # pgset "config 1"
-# pgset "flows 1024"
-# pgset "flowlen 8"
+ pgset "flows 1024"
+ pgset "flowlen 8"
 done
 
 # Time to run
