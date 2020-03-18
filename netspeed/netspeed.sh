@@ -50,17 +50,17 @@ do
         RKBPS=`expr $RBPS / 128`
 
         if [ $RXPPS -gt 5 -o $TXPPS -gt 5 ] ; then 
-                echo `date` -------------
-                echo "tx $1: $TKBPS Kb/s , $TXPPS pkts/s"
-                echo "rx $1: $RKBPS Kb/s , $RXPPS pkts/s"
-
                 #show all diff
                 Rdiff=`expr $R1 - $R1_begin`
                 Tdiff=`expr $T1 - $T1_begin`
                 Rbdiff=`expr $R1b - $R1b_begin`
                 Tbdiff=`expr $T1b - $T1b_begin`
+                RKbpsdiff=`expr $Rbdiff / 128`
+                TKbpsdiff=`expr $Tbdiff / 128`
 
-                echo "ALLTXKB $Tbdiff KB , ALLTXP2 $Rdiff , ALLRXKB $Rbdiff KB , ALLRXP2 $Tdiff "
+                echo `date` -------------
+                echo "tx $1: $TKBPS Kb/s (ALL: $TKbpsdiff kb) , $TXPPS pkts/s (ALL: $Tdiff)"
+                echo "rx $1: $RKBPS Kb/s (ALL: $RKbpsdiff kb) , $RXPPS pkts/s (ALL: $Rdiff)"
 
 	fi
 done
