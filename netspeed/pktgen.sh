@@ -68,7 +68,9 @@ PGDEV=/proc/net/pktgen/$ETH@$processor
  pgset "src_min $SRCIP"
  pgset "udp_dst_min 53"
  #pgset "udp_src_min 124"
- pgset "dst_mac $DSTMAC"
+ if [ "$DSTMAC"x != "00:00:00:00:00:00"x ];then
+    pgset "dst_mac $DSTMAC"
+ fi
  # Random address with in the min-max range
 # pgset "flag IPDST_RND"
 # pgset "dst_min 10.0.0.0"

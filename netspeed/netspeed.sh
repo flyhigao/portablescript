@@ -16,38 +16,52 @@ ALLRXP=0
 ALLTXP=0
 ALLRXKB=0
 ALLTXKB=0
+
+R1=`cat /sys/class/net/$1/statistics/rx_packets`
+T1=`cat /sys/class/net/$1/statistics/tx_packets`
+R1b=`cat /sys/class/net/$1/statistics/rx_bytes`
+T1b=`cat /sys/class/net/$1/statistics/tx_bytes`         
+
+R1_begin=$R1
+T1_begin=$T1
+R1b_begin=$R1b
+T1b_begin=$T1b
+
 echo beging counting ...
 while true
 do
+        R1_old=$R1
+        T1_old=$T1
+        R1b_old=$R1b
+        T1b_old=$T1b
+        sleep 1
         R1=`cat /sys/class/net/$1/statistics/rx_packets`
         T1=`cat /sys/class/net/$1/statistics/tx_packets`
         R1b=`cat /sys/class/net/$1/statistics/rx_bytes`
         T1b=`cat /sys/class/net/$1/statistics/tx_bytes`
-        sleep 1
-        R2=`cat /sys/class/net/$1/statistics/rx_packets`
-        T2=`cat /sys/class/net/$1/statistics/tx_packets`
-        R2b=`cat /sys/class/net/$1/statistics/rx_bytes`
-        T2b=`cat /sys/class/net/$1/statistics/tx_bytes`
-        TXPPS=`expr $T2 - $T1`
-        RXPPS=`expr $R2 - $R1`
 
-	ALLRXP=`expr $ALLRXP + $RXPPS`
-	ALLTXP=`expr $ALLTXP + $TXPPS`
+        TXPPS=`expr $T1 - $T1_old`
+        RXPPS=`expr $R1 - $R1_old`
 
 
-
-        TBPS=`expr $T2b - $T1b`
-        RBPS=`expr $R2b - $R1b`
+        TBPS=`expr $T1b - $T1b_old`
+        RBPS=`expr $R1b - $R1b_old`
         TKBPS=`expr $TBPS / 128`
         RKBPS=`expr $RBPS / 128`
 
-	ALLRXKB=`expr $ALLRXKB + $RKBPS`
-	ALLTXKB=`expr $ALLTXKB + $TKBPS`
-
         if [ $RXPPS -gt 5 -o $TXPPS -gt 5 ] ; then 
-	    echo `date` -------------
-            echo "tx $1: $TKBPS Kb/s , $TXPPS pkts/s"
-            echo "rx $1: $RKBPS Kb/s , $RXPPS pkts/s"
-	    echo "ALLTXP $ALLTXP , ALLRXP $ALLRXP , ALLTXKB $ALLTXKB KB , ALLRXKB $ALLRXKB KB"
+                echo `date` -------------
+                echo "tx $1: $TKBPS Kb/s , $TXPPS pkts/s"
+                echo "rx $1: $RKBPS Kb/s , $RXPPS pkts/s"
+
+                #show all diff
+                Rdiff=`expr $R1 - $R1_begin`
+                Tdiff=`expr $T1 - $T1_begin`
+                Rbdiff=`expr $R1b - $R1b_begin`
+                Tbdiff=`expr $T1b - $T1b_begin`
+
+                echo "ALLTXKB $Tbdiff KB , ALLTXP2 $Rdiff , ALLRXKB $Rbdiff KB , ALLRXP2 $Tdiff "
+
 	fi
 done
+
