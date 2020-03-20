@@ -37,6 +37,9 @@ ETH=$7
 
 
 RATEP=`echo "scale=0; $1/$CPUS" | bc`
+if [ $RATEP -lt 0 ];then
+  RATEP=1
+fi
 
 for processor in {0..31}
 do
@@ -66,7 +69,8 @@ PGDEV=/proc/net/pktgen/$ETH@$processor
  fi
  pgset "dst $DSTIP" 
  pgset "src_min $SRCIP"
- pgset "udp_dst_min 53"
+ pgset "udp_src_min 10000"
+ pgset "udp_dst_min 42353"
  #pgset "udp_src_min 124"
  if [ "$DSTMAC"x != "00:00:00:00:00:00"x ];then
     pgset "dst_mac $DSTMAC"
