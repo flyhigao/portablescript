@@ -52,6 +52,8 @@ EOF
     yum makecache
 fi
 echo Yumoption is $Yumoption ==================
+yum groups mark install "Development Tools" -y $Yumoption
+yum groups mark convert "Development Tools" -y $Yumoption
 yum groupinstall -y "Development Tools" -y $Yumoption
 yum install git net-tools tcpreplay bridge-utils wget openssl-devel bzip2-devel zlib \
     zlib-devel qemu libvirt-devel libxslt-devellibffi-devel python36-pip ansible curl \
