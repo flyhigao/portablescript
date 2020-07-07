@@ -69,6 +69,7 @@ PGDEV=/proc/net/pktgen/$ETH@$processor
  fi
  pgset "dst $DSTIP" 
  pgset "src_min $SRCIP"
+# pgset "src_max 255.255.255.255"
  pgset "udp_src_min 10000"
  pgset "udp_dst_min 42353"
  #pgset "udp_src_min 124"
