@@ -10,3 +10,8 @@ ethtool -K $1 tx off
 ethtool -A $1 autoneg off
 ethtool -A $1 tx off rx off 
 ethtool -a $1
+
+systemctl stop irqbalance
+systemctl disable irqbalance
+
+
