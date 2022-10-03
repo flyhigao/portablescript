@@ -12,3 +12,8 @@ if [ $sum -gt 98784247808 ];then
 else
         echo $sum less than 92g,go on
 fi
+
+
+#crontab -l
+#0 1 1 * * reboot
+#*/15 * * * * /root/datalimit.sh
