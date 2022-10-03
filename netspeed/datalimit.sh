@@ -9,6 +9,7 @@ if [ $sum -gt 98784247808 ];then
         iptables -F
         iptables -A INPUT -p tcp --destination-port 443 -j DROP
         iptables -A INPUT -p udp --destination-port 443 -j DROP
+        curl -s https://sc.ftqq.com/SCT129783T2QG2z22chzQkFBhHwArRCLVW.send?text=awsca_data_exceed_${sum}
 else
         echo $sum less than 92g,go on
 fi
