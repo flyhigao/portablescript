@@ -17,4 +17,4 @@ fi
 
 #crontab -l
 #0 1 1 * * reboot
-#*/15 * * * * /root/datalimit.sh
+#*/15 * * * * bash /root/datalimit.sh
